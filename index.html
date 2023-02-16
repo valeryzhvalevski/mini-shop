@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Простой интернет-магазин</title>
+  </head>
+  <style media="screen">
+  /* Стили для заголовка h1 */
+h1 {
+text-align: center;
+font-size: 3rem;
+margin-top: 2rem;
+margin-bottom: 2rem;
+}
+
+/* Стили для контейнера товаров */
+.products-container {
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+max-width: 1000px;
+margin: 0 auto;
+}
+
+/* Стили для отдельного товара */
+.product {
+width: 30%;
+margin-bottom: 2rem;
+padding: 1rem;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+text-align: center;
+}
+
+.product img {
+width: 100%;
+height: auto;
+margin-bottom: 1rem;
+}
+
+.product h2 {
+font-size: 1.5rem;
+margin-bottom: 1rem;
+}
+
+.product p {
+font-size: 1.2rem;
+margin-bottom: 1rem;
+}
+
+/* Стили для кнопки "Добавить в корзину" */
+.add-to-cart {
+display: block;
+margin: 0 auto;
+font-size: 1.2rem;
+padding: 0.5rem 1rem;
+background-color: #007bff;
+color: #fff;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+background-color: #0062cc;
+}
+
+/* Стили для контейнера корзины */
+.cart-container {
+max-width: 1000px;
+margin: 0 auto;
+margin-top: 2rem;
+}
+
+.cart-container h2 {
+font-size: 2rem;
+margin-bottom: 1rem;
+}
+
+.cart-container ul {
+list-style: none;
+margin: 0;
+padding: 0;
+}
+
+.cart-container li {
+font-size: 1.2rem;
+margin-bottom: 0.5rem;
+}
+
+.cart-container p {
+font-size: 1.2rem;
+margin-top: 1rem;
+}
+  </style>
+  <body>
+    <h1>Наш магазин</h1>
+    <div class="products-container">
+      <div class="product">
+        <img src="https://via.placeholder.com/150" alt="Product 1">
+        <h2>Товар 1</h2>
+        <p>Цена: $10.00</p>
+        <button class="add-to-cart">Добавить в корзину</button>
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/150" alt="Product 2">
+        <h2>Товар 2</h2>
+        <p>Цена: $20.00</p>
+        <button class="add-to-cart">Добавить в корзину</button>
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/150" alt="Product 3">
+        <h2>Товар 3</h2>
+        <p>Цена: $30.00</p>
+        <button class="add-to-cart">Добавить в корзину</button>
+      </div>
+    </div>
+    <div class="cart-container">
+      <h2>Корзина</h2>
+      <ul class="cart-items">
+        <!-- Здесь будут добавленные товары -->
+      </ul>
+      <p>Сумма: $0.00</p>
+    </div>
+    <script>
+    // Получаем ссылки на кнопки "Добавить в корзину"
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+// Объявляем массив товаров в корзине и общую стоимость
+let cartItems = [];
+let totalCost = 0;
+
+// Функция для добавления товара в корзину
+function addItemToCart(name, price) {
+// Проверяем, есть ли уже этот товар в корзине
+let alreadyInCart = false;
+cartItems.forEach(item => {
+  if (item.name === name) {
+    item.quantity++;
+    alreadyInCart = true;
+  }
+});
+// Если товара нет в корзине, добавляем его
+if (!alreadyInCart) {
+  cartItems.push({ name, price, quantity: 1 });
+}
+// Обновляем содержимое корзины на странице
+updateCart();
+}
+
+// Функция для обновления содержимого корзины на странице
+function updateCart() {
+const cartList = document.querySelector('.cart-items');
+cartList.innerHTML = '';
+cartItems.forEach(item => {
+  const li = document.createElement('li');
+  li.innerText = `${item.name} x ${item.quantity} = $${item.price * item.quantity}`;
+  cartList.appendChild(li);
+});
+// Обновляем общую стоимость товаров в корзине
+totalCost = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+const totalElement = document.querySelector('.cart-container p');
+totalElement.innerText = `Сумма: $${totalCost.toFixed(2)}`;
+}
+
+// Добавляем слушатель событий "click" на каждую кнопку "Добавить в корзину"
+addToCartButtons.forEach(button => {
+button.addEventListener('click', () => {
+  const product = button.parentNode;
+  const name = product.querySelector('h2').innerText;
+  const price = parseFloat(product.querySelector('p').innerText.replace(/^\D+/g, ''));
+  addItemToCart(name, price);
+});
+});
+    </script>
+  </body>
+</html>
