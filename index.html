@@ -149,17 +149,23 @@ updateCart();
 
 // Функция для обновления содержимого корзины на странице
 function updateCart() {
-const cartList = document.querySelector('.cart-items');
-cartList.innerHTML = '';
-cartItems.forEach(item => {
-  const li = document.createElement('li');
-  li.innerText = `${item.name} x ${item.quantity} = $${item.price * item.quantity}`;
-  cartList.appendChild(li);
-});
-// Обновляем общую стоимость товаров в корзине
-totalCost = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-const totalElement = document.querySelector('.cart-container p');
-totalElement.innerText = `Сумма: $${totalCost.toFixed(2)}`;
+  const cartList = document.querySelector('.cart-items');
+  cartList.innerHTML = '';
+  cartItems.forEach((item, index) => {
+    const li = document.createElement('li');
+    const deleteButton = document.createElement('button');
+    deleteButton.innerText = 'Удалить';
+    deleteButton.addEventListener('click', () => {
+      cartItems.splice(index, 1);
+      updateCart();
+    });
+    li.innerText = `${item.name} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`;
+    li.appendChild(deleteButton);
+    cartList.appendChild(li);
+  });
+  totalCost = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const totalElement = document.querySelector('.cart-container p');
+  totalElement.innerText = `Сумма: $${totalCost.toFixed(2)}`;
 }
 
 // Добавляем слушатель событий "click" на каждую кнопку "Добавить в корзину"
